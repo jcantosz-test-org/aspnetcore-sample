@@ -56,3 +56,5 @@ jobs:
       PRERELEASE: "true"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       ARTIFACT_NAME: "webapp"
+    secrets:
+      GH_TOKEN: ${{ github.token }}

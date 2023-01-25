@@ -24,8 +24,6 @@ on:
       RESOURCE_GROUP:
         required: true
 
-			
-				 
 jobs:
   deploy:
     runs-on: ubuntu-latest

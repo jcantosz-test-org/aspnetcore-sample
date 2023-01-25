@@ -14,7 +14,8 @@ on:
       ARTIFACT_NAME:
         required: true
         type: string
-      
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   release:

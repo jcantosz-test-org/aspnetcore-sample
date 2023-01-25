@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
+      - uses: actions/checkout@v3
       - name: Download a single artifact
         if: ${{ inputs.ENVIRONMENT == 'uat' }}
         uses: actions/download-artifact@v3
@@ -37,5 +38,6 @@ jobs:
           pwd
           release_number="v$(date '+%Y%m%d%H%M%S')"
           tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
-          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes
+          gh release create $release_number --prerelease=${{inputs.PRERELEASE}} --generate-notes
+#          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes
           # gh release view --repo jcantosz-test-org/aspnetcore-sample  --json isPrerelease --jq '.isPrerelease'

@@ -1,0 +1,30 @@
+on:
+  workflow_call:
+    inputs:
+      AZURE_WEBAPP_PACKAGE_PATH:
+        required: true
+        type: string
+      DOTNET_CORE_VERSION:
+        required: false
+        type: string
+        default: "6.0.x"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ inputs.DOTNET_CORE_VERSION }}
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Publish
+        run: dotnet publish --no-build --output "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: webapp
+          path: "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"

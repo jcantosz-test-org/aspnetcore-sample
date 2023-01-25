@@ -15,9 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-      - name: run script
-        run: |
-          echo neat
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Publish
+        run: dotnet publish --no-build --output "./publish"
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: webapp
+          path: publish
   deploy-dev:
     runs-on: ubuntu-latest
     environment: dev
@@ -28,7 +41,7 @@ jobs:
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}    
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: run script
         run: |
           az webapp list

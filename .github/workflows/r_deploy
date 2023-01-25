@@ -1,0 +1,57 @@
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+      ARTIFACT_NAME:
+        required: false
+        type: string
+        default: "webapp"
+      AZURE_WEBAPP_PACKAGE_PATH:
+        required: true
+        type: string
+      WEBAPP_NAME:
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      RESOURCE_GROUP:
+        required: true
+
+			
+				 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.ARTIFACT_NAME }}
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: run script
+        run: |
+          az webapp list
+          az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
+      - uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ vars.webappname }}
+          mask-inputs: false
+          app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
+#       - name: Deploy to Azure WebApp
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: ${{ inputs.WEBAPP_NAME }}
+#           package: "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"

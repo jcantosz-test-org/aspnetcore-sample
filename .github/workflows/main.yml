@@ -35,7 +35,7 @@ jobs:
     needs: deploy-dev
     uses: ./.github/workflows/r_deploy.yaml
     with:
-      ENVIRONMENT: "dev"
+      ENVIRONMENT: "qa"
       AZURE_WEBAPP_PACKAGE_PATH: "./publish"
       WEBAPP_NAME: ${{ vars.webappname }}
     secrets:

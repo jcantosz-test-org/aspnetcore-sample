@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+
+concurrency: 
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
   
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -23,7 +27,7 @@ jobs:
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "dev"
-      AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       WEBAPP_NAME: ${{ vars.webappname }}
     secrets:
       RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
@@ -36,7 +40,7 @@ jobs:
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "qa"
-      AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       WEBAPP_NAME: ${{ vars.webappname }}
     secrets:
       RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
@@ -50,5 +54,5 @@ jobs:
     with:
       ENVIRONMENT: "uat"
       PRERELEASE: "true"
-      AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       ARTIFACT_NAME: "webapp"

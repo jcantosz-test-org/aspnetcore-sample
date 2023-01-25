@@ -15,7 +15,8 @@ on:
         required: true
         type: string
     secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN:
+        required: true
 
 jobs:
   release:

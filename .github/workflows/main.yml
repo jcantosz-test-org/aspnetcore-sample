@@ -51,4 +51,4 @@ jobs:
       ENVIRONMENT: "uat"
       PRERELEASE: "true"
       AZURE_WEBAPP_PACKAGE_PATH: "./publish"
-      WEBAPP_NAME: "webapp"
+      ARTIFACT_NAME: "webapp"

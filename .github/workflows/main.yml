@@ -1,21 +1,29 @@
-name: workflow
+name: AZ test webdeploy
 
 on:
-  [push]
-
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
 
 jobs:
-  my-job:
+  build-and-deploy-dev:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.PUBLISH_PROFILE }}
-    - name: run script
-      run: echo ok 
-    - uses: azure/appservice-settings@v1
-      with:
-        app-name: jcantosz-myapp
-        slot-name: "development"
-        mask-inputs: false
-        general-settings-json: '{"linuxFxVersion": "PYTHON|${{ env.PYTHON_VERSION }}"}' #'General configuration settings as Key Value pairs'
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}    
+      - name: run script
+        run: echo ok 
+      - uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ env.webappname }}
+          mask-inputs: false
+          general-settings-json: '{"env": "dev"}' #'General configuration settings as Key Value pairs'

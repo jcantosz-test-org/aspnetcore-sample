@@ -18,10 +18,10 @@ jobs:
     - name: test
       run: |
         echo ok
-				env
+        env
 
   prod-release:
-	  needs: uat-deploy
+    needs: uat-deploy
     environment: prod
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +31,7 @@ jobs:
         echo ok
 
   prod-deploy:
-	  needs: uat-deploy
+    needs: uat-deploy
     environment: prod
     runs-on: ubuntu-latest
     steps:

@@ -31,7 +31,7 @@ jobs:
         echo ok
 
   prod-deploy:
-    needs: uat-deploy
+    needs: prod-release
     environment: prod
     runs-on: ubuntu-latest
     steps:

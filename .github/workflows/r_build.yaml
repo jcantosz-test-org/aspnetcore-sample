@@ -8,6 +8,14 @@ on:
         required: false
         type: string
         default: "6.0.x"
+      PROJECT_DIRECTORY:
+        required: false
+        type: string
+        default: '.'
+      APP_NAME:
+        required: false
+        type: string
+        default: "webapp"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,13 +26,13 @@ jobs:
         with:
           dotnet-version: ${{ inputs.DOTNET_CORE_VERSION }}
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore "${{ inputs.PROJECT_DIRECTORY }}"
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build "${{ inputs.PROJECT_DIRECTORY }}" --no-restore
       - name: Publish
-        run: dotnet publish --no-build --output "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish "${{ inputs.PROJECT_DIRECTORY }}" --no-build --output "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: webapp
+          name: "${{ inputs.APP_NAME }}"
           path: "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"

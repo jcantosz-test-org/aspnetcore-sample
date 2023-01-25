@@ -30,3 +30,16 @@ jobs:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  deploy-qa:
+    needs: deploy-dev
+    uses: ./.github/workflows/r_deploy.yaml
+    with:
+      ENVIRONMENT: "dev"
+      AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+      WEBAPP_NAME: ${{ vars.webappname }}
+    secrets:
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

@@ -56,8 +56,8 @@ jobs:
           app-name: ${{ vars.webappname }}
           mask-inputs: false
           app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
-      - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ vars.webappname }}
-          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+#       - name: Deploy to Azure WebApp
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: ${{ vars.webappname }}
+#           package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"

@@ -10,6 +10,7 @@ permissions:
   contents: read  # This is required for actions/checkout
 env:
   AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,17 +26,21 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Publish
-        run: dotnet publish --no-build --output "./publish"
+        run: dotnet publish --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: webapp
-          path: publish
+          path: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
   deploy-dev:
     runs-on: ubuntu-latest
     environment: dev
     needs: build
     steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: webapp
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
@@ -51,3 +56,8 @@ jobs:
           app-name: ${{ vars.webappname }}
           mask-inputs: false
           app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ vars.webappname }}
+          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"

@@ -21,7 +21,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}    
       - name: run script
-        run: echo ok 
+        run: |
+          az webapp list
+          az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
       - uses: azure/appservice-settings@v1
         with:
           app-name: ${{ vars.webappname }}

@@ -13,7 +13,7 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 jobs:
   build:
-    uses: ./.github/workflows/reusable/build.yaml
+    uses: ./.github/workflows/r_build.yaml
     with:
       AZURE_WEBAPP_PACKAGE_PATH: "./publish"
       DOTNET_CORE_VERSION: "6.0.x"

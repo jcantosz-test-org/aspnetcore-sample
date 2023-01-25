@@ -11,9 +11,17 @@ permissions:
 env:
   AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
 jobs:
-  build-and-deploy-dev:
+  build:
     runs-on: ubuntu-latest
     environment: dev
+    steps:
+      - name: run script
+        run: |
+          echo neat
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: build
     steps:
       - name: 'Az CLI login'
         uses: azure/login@v1
@@ -29,4 +37,4 @@ jobs:
         with:
           app-name: ${{ vars.webappname }}
           mask-inputs: false
-          general-settings-json: '{"env": "dev"}' #'General configuration settings as Key Value pairs'
+          app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'

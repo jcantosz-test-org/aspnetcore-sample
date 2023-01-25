@@ -24,6 +24,6 @@ jobs:
         run: echo ok 
       - uses: azure/appservice-settings@v1
         with:
-          app-name: ${{ env.webappname }}
+          app-name: ${{ vars.webappname }}
           mask-inputs: false
           general-settings-json: '{"env": "dev"}' #'General configuration settings as Key Value pairs'

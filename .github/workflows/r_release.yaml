@@ -26,11 +26,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
-
+          path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
       - name: Create release
         run: |
           ls -halt
-          ls -halt ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
+          pwd
           release_number="v$(date '+%Y%m%d%H%M%S')"
           tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
           gh release create $release_number --prerelease=${{inputs.PRERELEASE}} --generate-notes

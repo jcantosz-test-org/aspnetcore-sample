@@ -1,0 +1,36 @@
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+      PRERELEASE:
+        required: true
+        type: string
+        default: true
+      AZURE_WEBAPP_PACKAGE_PATH:
+        required: true
+        type: string
+      ARTIFACT_NAME:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - name: Download a single artifact
+        if: ${{ inputs.ENVIRONMENT == 'uat' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.ARTIFACT_NAME }}
+			
+      - name: Create release
+        run: |
+				  tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
+					flags=""
+          if [[ "${{inputs.PRERELEASE}}" == "true" ]]; then
+						flags="--prerelease"
+					fi
+          gh release create v$(date '+%Y%m%d%H%M%S') $flags --generate-notes

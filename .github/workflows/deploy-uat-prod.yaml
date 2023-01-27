@@ -1,8 +1,7 @@
-name: AZ test webdeploy
-
+name: AZ test deploy upper envs
 on:
   release:
-    types: [prerelease]
+    types: [prereleased]
   workflow_dispatch:
 
 concurrency:

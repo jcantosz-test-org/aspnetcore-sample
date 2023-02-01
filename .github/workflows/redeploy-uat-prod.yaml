@@ -1,0 +1,53 @@
+name: Redploy UAT & Prod
+on:
+  workflow_dispatch:
+    inputs: 
+      VERSION:
+        description: The version to redeploy
+        type: string
+
+concurrency:
+  group: ${{ github.ref }}-deploy
+  cancel-in-progress: true
+
+jobs:
+  approve-uat:
+    environment: prerelease
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "reuiqred approval"
+  deploy-uat:
+    needs: [approve-uat]
+    uses: ./.github/workflows/r_deploy.yaml
+    with:
+      ENVIRONMENT: "uat"
+      ENVIRONMENT_URL: "https://uat.github.com"
+      ARTIFACT_NAME: "webapp"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      RELEASE_VERSION: ${{ inputs.VERSION }}
+      WEBAPP_NAME: ${{ vars.webappname }}
+    secrets: inherit
+
+  release:
+    needs: [deploy-uat]
+    uses: ./.github/workflows/r_release.yaml
+    with:
+      ENVIRONMENT: "release"
+      PRERELEASE: false
+      RELEASE_VERSION: ${{ inputs.VERSION }}
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      ARTIFACT_NAME: "webapp"
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-prod:
+    needs: [release]
+    uses: ./.github/workflows/r_deploy.yaml
+    with:
+      ENVIRONMENT: "prod"
+      ENVIRONMENT_URL: "https://github.com"
+      ARTIFACT_NAME: "webapp"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      RELEASE_VERSION: ${{ inputs.VERSION }}
+      WEBAPP_NAME: ${{ vars.webappname }}
+    secrets: inherit

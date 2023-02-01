@@ -35,5 +35,5 @@ jobs:
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: "${{ inputs.APP_NAME }}"
+          name: "${{ inputs.ARTIFACT_NAME }}"
           path: "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"

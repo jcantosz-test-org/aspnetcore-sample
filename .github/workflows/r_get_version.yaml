@@ -37,6 +37,7 @@ jobs:
         id: get-next-version
         run: |
           set -x
+          git fetch --tags
           CURR_TAG=$(git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
           
           # If the CURR_TAG is empty, use the FALLBACK_TAG, else increment the tag

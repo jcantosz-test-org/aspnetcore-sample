@@ -51,5 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Update prerelease to release
-        run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }} --latest
         

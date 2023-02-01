@@ -38,14 +38,14 @@ jobs:
       name: ${{ inputs.ENVIRONMENT }}
       url: ${{ inputs.ENVIRONMENT_URL }}
     steps:
-
+      - uses: actions/checkout@v3
       - name: Download a single artifact
         if: ${{ inputs.ENVIRONMENT == 'dev' || inputs.ENVIRONMENT == 'qa' }}
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
 
-      - name: Downlaod release
+      - name: Download release
         if: ${{ inputs.ENVIRONMENT == 'uat' || inputs.ENVIRONMENT == 'prod' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

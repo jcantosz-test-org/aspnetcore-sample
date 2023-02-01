@@ -43,8 +43,8 @@ jobs:
           echo 'git tag | sort -Vr'
           git tag | sort -r
           echo "---------------"
-          echo 'git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"'
-          git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"
+          echo 'git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}[0-9]+'
+          git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}[0-9]+"
           echo "==============="
 
           echo $CURR_TAG

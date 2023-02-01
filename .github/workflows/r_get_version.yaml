@@ -38,14 +38,14 @@ jobs:
         run: |
           set -x
           git fetch --tags
-          export CURR_TAG=$(git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
+          export CURR_TAG=$(git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
           
           echo 'git tag | sort -Vr'
-          git tag | sort -Vr
-
-          echo 'git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"'
-          git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"
-          
+          git tag | sort -r
+          echo "---------------"
+          echo 'git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"'
+          git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"
+          echo "==============="
 
           echo $CURR_TAG
 

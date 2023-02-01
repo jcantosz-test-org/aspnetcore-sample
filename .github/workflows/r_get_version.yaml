@@ -38,13 +38,13 @@ jobs:
         run: |
           set -x
           git fetch --tags
-          export CURR_TAG=$(git tag | sort -Vr | egrep "${{ inputs.TAG_PREFIX}}${{ inputs.TAG_FORMAT }}" | head -1)
+          CURR_TAG=$(git tag | sort -Vr | egrep "${{ inputs.TAG_PREFIX}}${{ inputs.TAG_FORMAT }}" | head -1)
 
           # If the CURR_TAG is empty, use the FALLBACK_TAG, else increment the tag
           if [ -z "${CURR_TAG}" ]; then
             CURR_TAG="${{ inputs.FALLBACK_TAG }}"
           else
-            let "CURR_TAG++" 
+            CURR_TAG=$((CURR_TAG++))
           fi
           
           NEXT_VERSION="${{ inputs.TAG_PREFIX }}${CURR_TAG}"

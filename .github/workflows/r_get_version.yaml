@@ -38,7 +38,7 @@ jobs:
         run: |
           set -x
           git fetch --tags
-          export CURR_TAG=$(git tag | sort -r | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
+          export CURR_TAG=$(git tag | sort -r | grep "v[0-9]+ | head -1)
           
           echo 'git tag | sort -Vr'
           git tag | sort -r

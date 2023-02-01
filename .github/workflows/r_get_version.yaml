@@ -14,7 +14,7 @@ on:
       TAG_FORMAT:
         required: false
         type: string
-        default: '[0-9]*'
+        default: '[0-9]+'
     secrets:
       GH_TOKEN:
         required: true

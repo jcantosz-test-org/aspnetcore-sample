@@ -48,7 +48,7 @@ jobs:
             echo CURR_TAG=${CURR_TAG#${{ inputs.TAG_PREFIX }}}
             CURR_TAG=${CURR_TAG#${{ inputs.TAG_PREFIX}}}
             echo $CURR_TAG
-            let "$(CURR_TAG + 1)"
+            let "CURR_TAG++"
             echo $CURR_TAG
           fi
           

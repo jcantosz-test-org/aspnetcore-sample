@@ -49,6 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
+      - uses: actions/checkout@v3
       - name: Update prerelease to release
         run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }}
         

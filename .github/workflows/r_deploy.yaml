@@ -6,6 +6,9 @@ on:
       ENVIRONMENT:
         required: true
         type: string
+      ENVIRONMENT_URL:
+        required: false
+        type: string
       ARTIFACT_NAME:
         required: true
         type: string
@@ -31,7 +34,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
+    environment: 
+      name: ${{ inputs.ENVIRONMENT }}
+      url: ${{ inputs.ENVIRONMENT_URL }}
     steps:
 
       - name: Download a single artifact
@@ -42,6 +47,8 @@ jobs:
 
       - name: Downlaod release
         if: ${{ inputs.ENVIRONMENT == 'uat' || inputs.ENVIRONMENT == 'prod' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release download ${{ inputs.RELEASE_VERSION }} --pattern ' ${{ inputs.ARTIFACT_NAME }}.tgz'
 
       - name: 'Az CLI login'

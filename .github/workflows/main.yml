@@ -28,6 +28,7 @@ jobs:
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "dev"
+      ENVIRONMENT_URL: "https://dev.github.com"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       WEBAPP_NAME: ${{ vars.webappname }}
       ARTIFACT_NAME: "webapp"

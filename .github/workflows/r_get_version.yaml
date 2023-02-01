@@ -45,8 +45,11 @@ jobs:
             CURR_TAG="${{ inputs.FALLBACK_TAG }}"
           else
             # remove prefix and increment
-            CURR_TAG=${CURR_TAG#"${{ inputs.TAG_PREFIX }}"}
-            let "$(CURR_TAG + 1) 
+            echo CURR_TAG=${CURR_TAG#${{ inputs.TAG_PREFIX }}}
+            CURR_TAG=${CURR_TAG#${{ inputs.TAG_PREFIX}}}
+            echo $CURR_TAG
+            let "$(CURR_TAG + 1)
+            echo $CURR_TAG
           fi
           
           NEXT_VERSION="${{ inputs.TAG_PREFIX }}${CURR_TAG}"

@@ -45,6 +45,7 @@ jobs:
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "qa"
+      ENVIRONMENT_URL: "https://qa.github.com"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       WEBAPP_NAME: ${{ vars.webappname }}
       ARTIFACT_NAME: "webapp"
@@ -72,6 +73,7 @@ jobs:
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "uat"
+      ENVIRONMENT_URL: "https://uat.github.com"
       ARTIFACT_NAME: "webapp"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
@@ -95,6 +97,7 @@ jobs:
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "prod"
+      ENVIRONMENT_URL: "https://github.com"
       ARTIFACT_NAME: "webapp"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}

@@ -38,8 +38,10 @@ jobs:
         run: |
           set -x
           git fetch --tags
-          CURR_TAG=$(git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
-          
+          export CURR_TAG=$(git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
+          git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1
+          echo $CURR_TAG
+
           # If the CURR_TAG is empty, use the FALLBACK_TAG, else increment the tag
           if [ -z "${CURR_TAG}" ]; then
             CURR_TAG="${{ inputs.FALLBACK_TAG }}"

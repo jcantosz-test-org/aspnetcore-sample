@@ -59,7 +59,7 @@ jobs:
     uses: ./.github/workflows/r_release.yaml
     with:
       ENVIRONMENT: "prerelease"
-      PRERELEASE: "true"
+      PRERELEASE: true
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       ARTIFACT_NAME: "webapp"
@@ -82,7 +82,7 @@ jobs:
     uses: ./.github/workflows/r_release.yaml
     with:
       ENVIRONMENT: "release"
-      PRERELEASE: "false"
+      PRERELEASE: false
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       ARTIFACT_NAME: "webapp"

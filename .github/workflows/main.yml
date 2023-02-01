@@ -90,7 +90,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy-prod:
-    needs: [prerelease-uat, get-next-version-tag]
+    needs: [release, get-next-version-tag]
     uses: ./.github/workflows/r_deploy.yaml
     with:
       ENVIRONMENT: "prod"

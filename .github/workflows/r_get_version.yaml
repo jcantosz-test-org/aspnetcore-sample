@@ -50,5 +50,5 @@ jobs:
           NEXT_VERSION="${{ inputs.TAG_PREFIX }}${CURR_TAG}"
 
           # Set as output
-          echo "{NEXT_VERSION}={$NEXT_VERSION}" >> $GITHUB_OUTPUT
+          echo "NEXT_VERSION=${NEXT_VERSION}" >> $GITHUB_OUTPUT
  

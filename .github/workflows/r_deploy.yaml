@@ -44,6 +44,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
+          path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Download release
         if: ${{ inputs.ENVIRONMENT == 'uat' || inputs.ENVIRONMENT == 'prod' }}

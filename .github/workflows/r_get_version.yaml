@@ -1,0 +1,52 @@
+name: Get Next Version
+
+on:
+  workflow_call:
+    inputs:
+      TAG_PREFIX:
+        required: false
+        type: string
+        default: "v"
+      FALLBACK_TAG:
+        required: false
+        type: string
+        default: "1"
+      TAG_FORMAT:
+        required: true
+        type: string
+        default: '[0-9]*'
+    secrets:
+      GH_TOKEN:
+        required: true
+    outputs:
+      NEXT_VERSION:
+        description: "The next version to release"
+        value: ${{ jobs.create-version.outputs.NEXT_VERSION }}
+
+jobs:
+  create-version:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    outputs:
+      NEXT_VERSION: ${{ steps.get-next-version.outputs.NEXT_VERSION }}
+    steps:
+      - name: get next version
+        id: get-next-version
+        run: |
+          set -x
+          CURR_TAG=$(git tag | sort -Vr | grep "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | head -1)
+          
+          # If the CURR_TAG is empty, use the FALLBACK_TAG, else increment the tag
+          if [ -z "${CURR_TAG}" ]; then
+            CURR_TAG="${{ inputs.FALLBACK_TAG }}"
+          else
+            let "CURR_TAG++" 
+          fi
+          
+          NEXT_VERSION="${inputs.TAG_PREFIX}${CURR_TAG}"
+
+          # Set as output
+          echo "{NEXT_VERSION}={$NEXT_VERSION}" >> $GITHUB_OUTPUT
+ 

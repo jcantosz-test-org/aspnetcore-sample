@@ -29,11 +29,14 @@ jobs:
       ENVIRONMENT: "dev"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       WEBAPP_NAME: ${{ vars.webappname }}
-    secrets:
-      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARTIFACT_NAME: "webapp"
+    # Pass all secrets the calling workflow has access to
+    secrets: inherit
+    # secrets:
+    #   RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+    #   AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+    #   AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    #   AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   deploy-qa:
     needs: deploy-dev
@@ -42,19 +45,56 @@ jobs:
       ENVIRONMENT: "qa"
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       WEBAPP_NAME: ${{ vars.webappname }}
-    secrets:
-      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARTIFACT_NAME: "webapp"
+    secrets: inherit
 
-  prerelease-uat:
-    needs: deploy-qa
+  get-next-version-tag:
+    uses: ./.github/workflows/r_get_version.yaml
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  prerelease:
+    needs: [deploy-qa, get-next-version-tag] 
     uses: ./.github/workflows/r_release.yaml
     with:
-      ENVIRONMENT: "uat"
+      ENVIRONMENT: "prerelease"
       PRERELEASE: "true"
+      RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
       AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       ARTIFACT_NAME: "webapp"
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  deploy-uat:
+    needs: [prerelease-uat, get-next-version-tag]
+    uses: ./.github/workflows/r_deploy.yaml
+    with:
+      ENVIRONMENT: "uat"
+      ARTIFACT_NAME: "webapp"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
+      WEBAPP_NAME: ${{ vars.webappname }}
+    secrets: inherit
+
+  release:
+    needs: [deploy-uat, get-next-version-tag]
+    uses: ./.github/workflows/r_release.yaml
+    with:
+      ENVIRONMENT: "release"
+      PRERELEASE: "false"
+      RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      ARTIFACT_NAME: "webapp"
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-prod:
+    needs: [prerelease-uat, get-next-version-tag]
+    uses: ./.github/workflows/r_deploy.yaml
+    with:
+      ENVIRONMENT: "prod"
+      ARTIFACT_NAME: "webapp"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
+      WEBAPP_NAME: ${{ vars.webappname }}
+    secrets: inherit

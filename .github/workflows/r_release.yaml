@@ -1,3 +1,5 @@
+name: Create Release
+
 on:
   workflow_call:
     inputs:
@@ -6,7 +8,7 @@ on:
         type: string
       PRERELEASE:
         required: true
-        type: string
+        type: boolean
         default: true
       AZURE_WEBAPP_PACKAGE_PATH:
         required: true
@@ -14,28 +16,39 @@ on:
       ARTIFACT_NAME:
         required: true
         type: string
+      RELEASE_VERSION:
+        required: true
+        type: string
     secrets:
       GH_TOKEN:
         required: true
 
 jobs:
-  release:
+  create-prerelease:
+    if: ${{ inputs.PRERELEASE }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - uses: actions/checkout@v3
       - name: Download a single artifact
-        if: ${{ inputs.ENVIRONMENT == 'uat' }}
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
           path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
-      - name: Create release
+
+      - name: Create prerelease
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          release_number="v$(date '+%Y%m%d%H%M%S')"
           tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
-          gh release create $release_number --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
+          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
 #          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes
           # gh release view --repo jcantosz-test-org/aspnetcore-sample  --json isPrerelease --jq '.isPrerelease'
+  create-release:
+    if: ${{ ! inputs.PRERELEASE }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - name: Update prerelease to release
+        run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }}
+        

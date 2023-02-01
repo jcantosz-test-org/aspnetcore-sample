@@ -1,3 +1,5 @@
+name: Build
+
 on:
   workflow_call:
     inputs:
@@ -12,10 +14,9 @@ on:
         required: false
         type: string
         default: '.'
-      APP_NAME:
-        required: false
+      ARTIFACT_NAME:
+        required: true
         type: string
-        default: "webapp"
 jobs:
   build:
     runs-on: ubuntu-latest

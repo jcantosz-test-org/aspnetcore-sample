@@ -1,3 +1,5 @@
+name: Deploy to Environmnet
+
 on:
   workflow_call:
     inputs:
@@ -5,14 +7,16 @@ on:
         required: true
         type: string
       ARTIFACT_NAME:
+        required: true
+        type: string
+      RELEASE_VERSION:
         required: false
         type: string
-        default: "webapp"
       AZURE_WEBAPP_PACKAGE_PATH:
         required: true
         type: string
       WEBAPP_NAME:
-        required: true
+        required: false
         type: string
     secrets:
       AZURE_CLIENT_ID:
@@ -29,14 +33,17 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
+
       - name: Download a single artifact
         if: ${{ inputs.ENVIRONMENT == 'dev' || inputs.ENVIRONMENT == 'qa' }}
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
+
       - name: Downlaod release
         if: ${{ inputs.ENVIRONMENT == 'uat' || inputs.ENVIRONMENT == 'prod' }}
-        run: echo release
+        run: gh release download ${{ inputs.RELEASE_VERSION }} --pattern ' ${{ inputs.ARTIFACT_NAME }}.tgz'
+
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:

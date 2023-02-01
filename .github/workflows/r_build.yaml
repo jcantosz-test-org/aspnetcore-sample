@@ -37,3 +37,4 @@ jobs:
         with:
           name: "${{ inputs.ARTIFACT_NAME }}"
           path: "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+          retention-days: 5

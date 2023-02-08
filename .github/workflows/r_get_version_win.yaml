@@ -25,7 +25,7 @@ on:
 
 jobs:
   create-version:
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
     environment: ${{ inputs.ENVIRONMENT }}
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -36,24 +36,19 @@ jobs:
       - name: get next version
         id: get-next-version
         run: |
-          set -x
           git fetch --tags
-          CURR_TAG=$(git tag | sort -Vr | egrep "${{ inputs.TAG_PREFIX}}${{ inputs.TAG_FORMAT }}" | head -1)
+          $CURR_TAG=(git tag | select-string "v[0-9]+" | sort-object -Descending)[0].toString().trimStart('v')
 
-          # If the CURR_TAG is empty, use the FALLBACK_TAG, else increment the tag
-          if [ -z "${CURR_TAG}" ]; then
-            CURR_TAG="${{ inputs.FALLBACK_TAG }}"
-          else
-            # remove prefix and increment
-            echo CURR_TAG=${CURR_TAG#${{ inputs.TAG_PREFIX }}}
-            CURR_TAG=${CURR_TAG#${{ inputs.TAG_PREFIX}}}
-            echo $CURR_TAG
-            let "CURR_TAG++"
-            echo $CURR_TAG
-          fi
+          if ([string]::IsNullOrEmpty($myvar3)) {
+            $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
+          } else {
+            $CURR_TAG=(([int64]$bbb) + 1)
+          }
           
-          NEXT_VERSION="${{ inputs.TAG_PREFIX }}${CURR_TAG}"
+          $NEXT_VERSION=("v{0:0#}" -f $CURR_TAG)
 
           # Set as output
-          echo "NEXT_VERSION=${NEXT_VERSION}" >> $GITHUB_OUTPUT
- 
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $env:GITHUB_OUTPUT
+
+
+

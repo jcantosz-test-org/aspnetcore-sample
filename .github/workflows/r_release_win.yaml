@@ -26,7 +26,7 @@ on:
 jobs:
   create-prerelease:
     if: ${{ inputs.PRERELEASE }}
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
     environment: 
       name: ${{ inputs.ENVIRONMENT }}
       url: ${{ steps.prerelease.outputs.RELEASE_URL }}
@@ -43,16 +43,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
-          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
+          compress-archive -Path  ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}} -Force -DestinationPath ${{ inputs.ARTIFACT_NAME }}.zip
 
-          RELEASE_URL=$(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')
-          echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_OUTPUT
+          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.zip"
+
+          $RELEASE_URL=(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')
+          echo "RELEASE_URL=${RELEASE_URL}" >> $env:GITHUB_OUTPUT
 #          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes
           # gh release view --repo jcantosz-test-org/aspnetcore-sample  --json isPrerelease --jq '.isPrerelease'
   create-release:
     if: ${{ ! inputs.PRERELEASE }}
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - uses: actions/checkout@v3
@@ -60,4 +61,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }} --latest
-        
+
+

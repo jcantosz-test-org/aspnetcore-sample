@@ -36,9 +36,6 @@ jobs:
         run: dotnet build "${{ inputs.PROJECT_DIRECTORY }}" --no-restore
       - name: Publish
         run: dotnet publish "${{ inputs.PROJECT_DIRECTORY }}" --no-build --output "${{ inputs.OUTPUT_PATH }}"
-      - name: showall
-          dir
-
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:

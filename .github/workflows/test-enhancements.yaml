@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/r_build.yaml
     with:
       AZURE_WEBAPP_PACKAGE_PATH: |
-        ./publish
-        ./bin
+        /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
+        /home/runner/work/aspnetcore-sample/aspnetcore-sample/bin
       DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"

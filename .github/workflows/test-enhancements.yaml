@@ -54,3 +54,26 @@ jobs:
             /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/bin
             /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/Pages
           retention-days: 1
+  deploy:
+    uses: ./.github/workflows/r_deploy_win.yaml
+    strategy:
+      matrix:
+        includes:
+          - packagepath: "webapp"
+            webappname: "user-site"
+            url: dev.github.com
+          - packagepath: "webapp"
+            webappname: "admin-site"
+            url: dev.github.com/admin
+          - packagepath: "webapp"
+            webappname: "super-admin-site"
+            url: dev.github.com/super-admin
+
+
+    with:
+      ENVIRONMENT: "dev"
+      ENVIRONMENT_URL: "${{ matrix.url }}"
+      AZURE_WEBAPP_PACKAGE_PATH: "${{ matrix.packagepath }}"
+      WEBAPP_NAME: ${{ matrix.webappname }}
+      ARTIFACT_NAME: "webapp"
+    secrets: inherit

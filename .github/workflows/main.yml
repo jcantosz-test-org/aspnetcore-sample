@@ -25,7 +25,7 @@ jobs:
 
   deploy-dev:
     needs: build
-    uses: ./.github/workflows/r_deploy.yaml
+    uses: ./.github/workflows/r_deploy_win.yaml
     with:
       ENVIRONMENT: "dev"
       ENVIRONMENT_URL: "https://dev.github.com"
@@ -42,7 +42,7 @@ jobs:
 
   deploy-qa:
     needs: deploy-dev
-    uses: ./.github/workflows/r_deploy.yaml
+    uses: ./.github/workflows/r_deploy_win.yaml
     with:
       ENVIRONMENT: "qa"
       ENVIRONMENT_URL: "https://qa.github.com"
@@ -70,7 +70,7 @@ jobs:
   
   deploy-uat:
     needs: [prerelease, get-next-version-tag]
-    uses: ./.github/workflows/r_deploy.yaml
+    uses: ./.github/workflows/r_deploy_win.yaml
     with:
       ENVIRONMENT: "uat"
       ENVIRONMENT_URL: "https://uat.github.com"
@@ -94,7 +94,7 @@ jobs:
 
   deploy-prod:
     needs: [release, get-next-version-tag]
-    uses: ./.github/workflows/r_deploy.yaml
+    uses: ./.github/workflows/r_deploy_win.yaml
     with:
       ENVIRONMENT: "prod"
       ENVIRONMENT_URL: "https://github.com"

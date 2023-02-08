@@ -19,8 +19,31 @@ jobs:
   build:
     uses: ./.github/workflows/r_build.yaml
     with:
+      OUTPUT_PATH: ./publish
       AZURE_WEBAPP_PACKAGE_PATH: |
         /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
         /home/runner/work/aspnetcore-sample/aspnetcore-sample/bin
       DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"
+  build-inline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "6.0.x"
+      - name: Restore
+        run: dotnet restore .
+      - name: Build
+        run: dotnet build . --no-restore
+      - name: Publish
+        run: dotnet publish . --no-build --output ./publish
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: "my-arti"
+          path: |
+            /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
+            /home/runner/work/aspnetcore-sample/aspnetcore-sample/bin
+          retention-days: 1

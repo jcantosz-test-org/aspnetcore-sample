@@ -10,6 +10,10 @@ on:
         required: false
         type: string
         default: "6.0.x"
+      OUTPUT_PATH:
+        required: false
+        type: string
+        default: "./publish"
       PROJECT_DIRECTORY:
         required: false
         type: string
@@ -31,7 +35,7 @@ jobs:
       - name: Build
         run: dotnet build "${{ inputs.PROJECT_DIRECTORY }}" --no-restore
       - name: Publish
-        run: dotnet publish "${{ inputs.PROJECT_DIRECTORY }}" --no-build --output "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish "${{ inputs.PROJECT_DIRECTORY }}" --no-build --output "${{ inputs.OUTPUT_PATH }}"
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:

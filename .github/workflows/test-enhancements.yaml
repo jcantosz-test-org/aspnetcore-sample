@@ -55,6 +55,7 @@ jobs:
             /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/Pages
           retention-days: 1
   deploy:
+    needs: build
     uses: ./.github/workflows/r_deploy_win.yaml
     strategy:
       matrix:

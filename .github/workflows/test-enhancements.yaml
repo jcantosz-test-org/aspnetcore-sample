@@ -21,7 +21,6 @@ jobs:
     with:
       AZURE_WEBAPP_PACKAGE_PATH: |
         "./publish"
-        "./Properties"
 
       DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"

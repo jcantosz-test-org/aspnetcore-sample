@@ -21,8 +21,9 @@ jobs:
     with:
       OUTPUT_PATH: ./publish
       AZURE_WEBAPP_PACKAGE_PATH: |
-        /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
-        /home/runner/work/aspnetcore-sample/aspnetcore-sample/bin
+          /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
+          /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/bin
+          /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/Pages
       DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"
   build-inline:

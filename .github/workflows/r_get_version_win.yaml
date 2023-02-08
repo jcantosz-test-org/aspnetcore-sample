@@ -39,7 +39,7 @@ jobs:
           git fetch --tags
           $CURR_TAG=(git tag | select-string "v[0-9]+" | sort-object -Descending)[0].toString().trimStart('v')
 
-          if ([string]::IsNullOrEmpty($myvar3)) {
+          if ([string]::IsNullOrEmpty($CURR_TAG)) {
             $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
           } else {
             $CURR_TAG=(([int64]$bbb) + 1)

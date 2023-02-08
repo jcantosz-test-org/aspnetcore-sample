@@ -64,7 +64,7 @@ jobs:
           az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
       - uses: azure/appservice-settings@v1
         with:
-          app-name: ${{ vars.webappname }}
+          app-name: ${{ inputs.WEBAPP_NAME }}
           mask-inputs: false
           app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
 #       - name: Deploy to Azure WebApp

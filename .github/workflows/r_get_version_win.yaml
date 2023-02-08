@@ -42,7 +42,7 @@ jobs:
           if ([string]::IsNullOrEmpty($CURR_TAG)) {
             $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
           } else {
-            $CURR_TAG=(([int64]$bbb) + 1)
+            $CURR_TAG=(([int64]$CURR_TAG) + 1)
           }
           
           $NEXT_VERSION=("v{0:0#}" -f $CURR_TAG)

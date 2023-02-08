@@ -15,7 +15,8 @@ permissions:
 env:
   AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
   AZURE_WEBAPP_PACKAGE_PATH: |
-    "./publish"
+    ./publish
+    ./bin
 jobs:
   build:
     uses: ./.github/workflows/r_build.yaml

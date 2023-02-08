@@ -52,7 +52,7 @@ jobs:
     secrets: inherit
 
   get-next-version-tag:
-    uses: ./.github/workflows/r_get_version.yaml
+    uses: ./.github/workflows/r_get_version_win.yaml
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

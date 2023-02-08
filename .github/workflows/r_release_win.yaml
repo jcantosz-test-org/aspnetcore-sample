@@ -1,0 +1,63 @@
+name: Create Release
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+      PRERELEASE:
+        required: true
+        type: boolean
+        default: true
+      AZURE_WEBAPP_PACKAGE_PATH:
+        required: true
+        type: string
+      ARTIFACT_NAME:
+        required: true
+        type: string
+      RELEASE_VERSION:
+        required: true
+        type: string
+    secrets:
+      GH_TOKEN:
+        required: true
+
+jobs:
+  create-prerelease:
+    if: ${{ inputs.PRERELEASE }}
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ inputs.ENVIRONMENT }}
+      url: ${{ steps.prerelease.outputs.RELEASE_URL }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.ARTIFACT_NAME }}
+          path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Create prerelease
+        id: prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
+          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
+
+          RELEASE_URL=$(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')
+          echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_OUTPUT
+#          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes
+          # gh release view --repo jcantosz-test-org/aspnetcore-sample  --json isPrerelease --jq '.isPrerelease'
+  create-release:
+    if: ${{ ! inputs.PRERELEASE }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update prerelease to release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }} --latest
+        

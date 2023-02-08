@@ -50,5 +50,6 @@ jobs:
           name: "my-arti"
           path: |
             /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
-            /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp
+            /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/bin
+            /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/Pages
           retention-days: 1

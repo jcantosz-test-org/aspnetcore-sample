@@ -48,6 +48,7 @@ jobs:
           $NEXT_VERSION=("v{0:0#}" -f $CURR_TAG)
 
           # Set as output
+          echo $NEXT_VERSION
           echo "NEXT_VERSION=$NEXT_VERSION" >> $env:GITHUB_OUTPUT
 
 

@@ -58,7 +58,7 @@ jobs:
 
   prerelease:
     needs: [deploy-qa, get-next-version-tag] 
-    uses: ./.github/workflows/r_release.yaml
+    uses: ./.github/workflows/r_release_win.yaml
     with:
       ENVIRONMENT: "prerelease"
       PRERELEASE: true
@@ -82,7 +82,7 @@ jobs:
 
   release:
     needs: [deploy-uat, get-next-version-tag]
-    uses: ./.github/workflows/r_release.yaml
+    uses: ./.github/workflows/r_release_win.yaml
     with:
       ENVIRONMENT: "release"
       PRERELEASE: false
@@ -103,3 +103,4 @@ jobs:
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
       WEBAPP_NAME: ${{ vars.webappname }}
     secrets: inherit
+

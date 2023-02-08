@@ -40,12 +40,15 @@ jobs:
       - name: Publish
         run: dotnet publish . --no-build --output ./publish
       - name: showall
-        run: dir
+        run: |
+          cd jcantosz-myapp
+          dir
+          pwd
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: "my-arti"
           path: |
             /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
-            /home/runner/work/aspnetcore-sample/aspnetcore-sample/bin
+            /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp
           retention-days: 1

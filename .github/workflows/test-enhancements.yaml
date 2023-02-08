@@ -1,0 +1,27 @@
+name: test enhancements
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: write  # read is required for actions/checkout, write is required to create a release
+env:
+  AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+jobs:
+  build:
+    uses: ./.github/workflows/r_build.yaml
+    with:
+      AZURE_WEBAPP_PACKAGE_PATH: |
+        "./publish"
+        "./Properties"
+
+      DOTNET_CORE_VERSION: "6.0.x"
+      ARTIFACT_NAME: "webapp"

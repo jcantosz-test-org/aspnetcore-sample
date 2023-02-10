@@ -58,6 +58,8 @@ jobs:
     needs: build
     uses: ./.github/workflows/r_deploy_win.yaml
     strategy:
+      # Dont cancel other jobs if one fails
+      fail-fast: false
       matrix:
         includes:
           - packagepath: "webapp"

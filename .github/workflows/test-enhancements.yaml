@@ -60,17 +60,17 @@ jobs:
     strategy:
       # Dont cancel other jobs if one fails
       fail-fast: false
-      max-parallel: 1
+      #max-parallel: 1
       matrix:
         includes:
           - packagepath: "webapp"
-            webappname: "${{ vars.webappname }}"
+            webappname: "jcantosz-testwebapp"
             url: dev.github.com
           - packagepath: "webapp"
-            webappname: "${{ vars.webappname }}"
+            webappname: "jcantosz-testwebapp-admin"
             url: dev.github.com/admin
           - packagepath: "webapp"
-            webappname: "${{ vars.webappname }}"
+            webappname: "jcantosz-testwebapp-superadmin"
             url: dev.github.com/super-admin
 
 
@@ -78,6 +78,6 @@ jobs:
       ENVIRONMENT: "dev"
       ENVIRONMENT_URL: "${{ matrix.url }}"
       AZURE_WEBAPP_PACKAGE_PATH: "${{ matrix.packagepath }}"
-      WEBAPP_NAME: jcantosz-testwebapp
+      WEBAPP_NAME: "${{ matrix.webappname }}"
       ARTIFACT_NAME: "webapp"
     secrets: inherit

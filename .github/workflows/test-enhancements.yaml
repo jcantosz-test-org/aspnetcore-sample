@@ -78,6 +78,6 @@ jobs:
       ENVIRONMENT: "dev"
       ENVIRONMENT_URL: "${{ matrix.url }}"
       AZURE_WEBAPP_PACKAGE_PATH: "${{ matrix.packagepath }}"
-      WEBAPP_NAME: ${{ matrix.webappname }}
+      WEBAPP_NAME: jcantosz-testwebapp
       ARTIFACT_NAME: "webapp"
     secrets: inherit

@@ -60,16 +60,17 @@ jobs:
     strategy:
       # Dont cancel other jobs if one fails
       fail-fast: false
+      max-parallel: 1
       matrix:
         includes:
           - packagepath: "webapp"
-            webappname: "user-site"
+            webappname: "${{ vars.webappname }}"
             url: dev.github.com
           - packagepath: "webapp"
-            webappname: "admin-site"
+            webappname: "${{ vars.webappname }}"
             url: dev.github.com/admin
           - packagepath: "webapp"
-            webappname: "super-admin-site"
+            webappname: "${{ vars.webappname }}"
             url: dev.github.com/super-admin
 
 

@@ -127,7 +127,7 @@ jobs:
       ENVIRONMENT: "prod"
       ENVIRONMENT_URL: "https://github.com"
       ARTIFACT_NAME: "webapp"
-      ARTIFACT_PATHS: "webapp"
+      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
       WEBAPP_NAME: ${{ vars.webappname }}
     secrets: inherit

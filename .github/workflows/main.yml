@@ -40,13 +40,13 @@ jobs:
             appname: "${{ vars.webappname }}"
             url: dev.github.com
           - packagepath: "webapp"
-            webappname: "admin-site"
+            appname: "admin-site"
             url: dev.github.com/admin
     with:
       ENVIRONMENT: "dev"
-      ENVIRONMENT_URL: "https://dev.github.com"
+      ENVIRONMENT_URL: "${{ matrix.url }}"
       AZURE_WEBAPP_PACKAGE_PATH: "${{ matrix.packagepath }}"
-      WEBAPP_NAME: ${{ matrix.webappname }}
+      WEBAPP_NAME: "${{ matrix.appname }}"
       ARTIFACT_NAME: "webapp"
     # Pass all secrets the calling workflow has access to
     secrets: inherit

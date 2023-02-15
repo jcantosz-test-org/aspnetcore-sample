@@ -87,18 +87,6 @@ jobs:
   deploy-uat:
     needs: [prerelease, get-next-version-tag]
     uses: ./.github/workflows/r_deploy_win.yaml
-    strategy:
-      matrix:
-        includes:
-          - packagepath: "webapp"
-            webappname: "user-site"
-            url: dev.github.com
-          - packagepath: "webapp"
-            webappname: "admin-site"
-            url: dev.github.com/admin
-          - packagepath: "webapp"
-            webappname: "super-admin-site"
-            url: dev.github.com/super-admin
     with:
       ENVIRONMENT: "uat"
       ENVIRONMENT_URL: "https://uat.github.com"

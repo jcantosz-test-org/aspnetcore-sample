@@ -1,4 +1,4 @@
-name: Deploy to Environmnet
+name: Deploy to Azure Function
 
 on:
   workflow_call:
@@ -12,18 +12,18 @@ on:
       ARTIFACT_NAME:
         required: true
         type: string
+      RELEASE_VERSION:
+        required: false
+        type: string
       ARTIFACT_DOWNLOAD_PATH:
         required: false
         type: string
         default: artifacts
-      RELEASE_VERSION:
-        required: false
-        type: string
-      AZURE_WEBAPP_PACKAGE_PATH:
+      AZURE_FUNCTIONAPP_PACKAGE_PATH:
         required: true
         type: string
-      WEBAPP_NAME:
-        required: false
+      AZURE_FUNCTIONAPP_NAME:
+        required: true
         type: string
     secrets:
       AZURE_CLIENT_ID:
@@ -64,20 +64,13 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      - name: run script
-        run: |
-          az webapp list
-          az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
-      - uses: azure/appservice-settings@v1
+
+      - name: 'Deploy to Azure Functions'
+        uses: Azure/functions-action@v1
         with:
-          app-name: ${{ inputs.WEBAPP_NAME }}
-          mask-inputs: false
-          app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
-#       - name: Deploy to Azure WebApp
-#         uses: azure/webapps-deploy@v2
-#         with:
-#           app-name: ${{ inputs.WEBAPP_NAME }}
-#           package: "${{ARTIFACT_DOWNLOAD_PATH}}/${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: '${{ inputs.ARTIFACT_DOWNLOAD_PATH }}/${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+
       - name: "write deploying info to step summary"
         run: |
-          echo "Deployed WebApp ${{ inputs.WEBAPP_NAME }} to ${{ inputs.ENVIRONMENT }} (${{ inputs.ENVIRONMENT_URL }})" >> $env:GITHUB_STEP_SUMMARY
+          echo "Deployed Azure Function ${{ inputs.AZURE_FUNCTIONAPP_NAME }} to ${{ inputs.ENVIRONMENT }} (${{ inputs.ENVIRONMENT_URL }})" >> $env:GITHUB_STEP_SUMMARY

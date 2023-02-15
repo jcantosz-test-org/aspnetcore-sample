@@ -1,0 +1,97 @@
+name: dotnet-framework-build
+on:
+  workflow_call:
+    inputs:
+      ARTIFACT_NAME:
+        required: true
+        type: string
+      ARTIFACT_PATHS:
+        required: true
+        type: string
+      ARTIFACT_RETENETION_DAYS:
+        required: false
+        type: number
+        default: 1
+      SOLUTION_PATH:
+        required: true
+        type: string
+      BUILD_CONFIGURATION:
+        required: false
+        type: string
+        default: release
+      BUILD_PLATFORM:
+        required: false
+        type: string
+        default: "any cpu"
+      VISUAL_STUDIO_VERSION:
+        required: false
+        type: string
+        default: "16.0"
+      MSBUILD_VERBOSITY:
+        required: false
+        type: string
+        default: normal
+      NUGET_SOURCES:
+        required: false
+        type: string
+        default: "-Source https://nuget.org/api/v2/"
+
+env:
+  BuildConfiguration: "${{ inputs.BUILD_CONFIGURATION }}"
+  BuildPlatform: "${{ inputs.BUILD_PLATFORM }}"
+  Parameters_solution: "${{ inputs.SOLUTION_PATH }}"
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+    - name: NuGet restore
+      run: nuget restore ${{ env.Parameters_solution }} ${{ inputs.NUGET_SOURCES }}
+  
+    - name: install msbuild
+      uses: microsoft/setup-msbuild@v1.0.2
+      with:
+        vs-version: '[16.11,17.0)'
+    - name: run msbuild
+      run: msbuild ${{ env.Parameters_solution }} /p:VisualStudioVersion="${{ inputs.VISUAL_STUDIO_VERSION }}" /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="${{ runner.temp }}\" -p:Configuration=${{ env.BuildConfiguration }} -p:Platform="${{ env.BuildPlatform }}" -v:"${{ inputs.MSBUILD_VERBOSITY }}"
+    
+    - name: Setup VSTest Path
+      if: 'false'
+      uses: darenm/Setup-VSTest@v1
+    - name: Install Dependencies for VSTest
+      if: 'false'
+      shell: pwsh
+      run: |-
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module VstsTaskSdk -AllowClobber
+    - name: Executing VSTest
+      if: 'false'
+      env:
+        SEARCH_FOLDER: "${{ github.workspace }}"
+        TEST_RESULTS_FOLDER: "${{ runner.temp }}/${{ github.run_id }}_resultsfolder"
+        PATTERN: "**\\${{ env.BuildConfiguration }}\\*test*.dll;!**\\obj\\**"
+        ARGS: "/Logger:trx"
+      shell: pwsh
+      run: |-
+        Import-Module -Name VstsTaskSdk
+        $SearchPattern = $env:PATTERN.Split(';').Trim()
+        Write-Host "Search Pattern: " $SearchPattern
+        Write-Host "Finding files for VSTest to execute.."
+        $files = Find-VstsMatch -DefaultRoot $env:SEARCH_FOLDER -Pattern $SearchPattern
+        Write-Host "Files found:" $files
+        $exe = "vstest.console.exe"
+        $args = $env:ARGS.Split(';').Trim()
+        Write-Host "Arguments are: " $args
+        & $exe $files /ResultsDirectory:$env:TEST_RESULTS_FOLDER $args
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.ARTIFACT_NAME }}
+        path: ${{ inputs.ARTIFACT_PATHS }}
+        retention-days: ${{ inputs.ARTIFACT_RETENETION_DAYS }}
+

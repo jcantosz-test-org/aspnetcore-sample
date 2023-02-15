@@ -20,13 +20,17 @@ jobs:
     uses: ./.github/workflows/r_build.yaml
     with:
       OUTPUT_PATH: "./publish"
-      AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+      # package up multiple paths into the artifact
+      ARTIFACT_PATHS: |
+        "./publish"
+        jcantosz-myapp/bin
       DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"
 
   deploy-dev:
     needs: build
     uses: ./.github/workflows/r_deploy_win.yaml
+    # demo of deploying multiple artifacts
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -123,7 +127,7 @@ jobs:
       ENVIRONMENT: "prod"
       ENVIRONMENT_URL: "https://github.com"
       ARTIFACT_NAME: "webapp"
-      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
+      ARTIFACT_PATHS: "webapp"
       RELEASE_VERSION: ${{ needs.get-next-version-tag.outputs.NEXT_VERSION }}
       WEBAPP_NAME: ${{ vars.webappname }}
     secrets: inherit

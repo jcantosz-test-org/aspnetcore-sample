@@ -59,7 +59,7 @@ jobs:
     uses: ./.github/workflows/r_deploy_win.yaml
     strategy:
       matrix:
-        includes:
+        include:
           - packagepath: "webapp"
             webappname: "user-site"
             url: dev.github.com

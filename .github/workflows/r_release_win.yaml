@@ -1,4 +1,4 @@
-name: Create Release
+name: Create Release (Windows)
 
 on:
   workflow_call:

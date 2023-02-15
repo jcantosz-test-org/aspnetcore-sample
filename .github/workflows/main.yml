@@ -29,19 +29,19 @@ jobs:
 
   deploy-dev:
     needs: build
-    uses: ./.github/workflows/r_deploy_win.yaml
     # demo of deploying multiple artifacts
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
-        includes:
+        include:
           - packagepath: "webapp"
             appname: "${{ vars.webappname }}"
             url: dev.github.com
           - packagepath: "webapp"
             appname: "admin-site"
             url: dev.github.com/admin
+    uses: ./.github/workflows/r_deploy_win.yaml
     with:
       ENVIRONMENT: "dev"
       ENVIRONMENT_URL: "${{ matrix.url }}"

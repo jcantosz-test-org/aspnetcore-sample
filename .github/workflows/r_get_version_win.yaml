@@ -1,4 +1,4 @@
-name: Get Next Version
+name: Get Next Version (Windows)
 
 on:
   workflow_call:

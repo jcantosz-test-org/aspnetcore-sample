@@ -1,4 +1,4 @@
-name: Deploy to Environmnet
+name: Deploy to Environmnet (Windows)
 
 on:
   workflow_call:

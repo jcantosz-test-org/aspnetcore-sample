@@ -44,8 +44,8 @@ jobs:
     steps:
       - name: log
         run: |
-          echo ${{ inputs.WEBAPP_NAME }}
-          echo ${{ inputs.ENVIRONMENT_URL }}
+          echo "${{ inputs.WEBAPP_NAME }}"
+          echo "${{ inputs.ENVIRONMENT_URL }}"
       - uses: actions/checkout@v3
       - name: Download a single artifact
         if: ${{ inputs.ENVIRONMENT == 'dev' || inputs.ENVIRONMENT == 'qa' }}

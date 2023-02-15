@@ -2,8 +2,8 @@ name: test enhancements
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
 
 concurrency:
   group: ${{ github.ref }}-enhance
@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/r_build.yaml
     with:
       OUTPUT_PATH: ./publish
-      AZURE_WEBAPP_PACKAGE_PATH: |
+      ARTIFACT_PATHS: |
           /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
           /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/bin
           /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/Pages

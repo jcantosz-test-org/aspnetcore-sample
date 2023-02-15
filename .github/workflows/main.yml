@@ -20,18 +20,33 @@ jobs:
     uses: ./.github/workflows/r_build.yaml
     with:
       OUTPUT_PATH: "./publish"
-      AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+      # package up multiple paths into the artifact
+      ARTIFACT_PATHS: |
+        "./publish"
+        jcantosz-myapp/bin
       DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"
 
   deploy-dev:
     needs: build
+    # demo of deploying multiple artifacts
+    strategy:
+      fail-fast: false
+      #max-parallel: 1
+      matrix:
+        include:
+          - packagepath: "webapp"
+            appname: "${{ vars.WEBAPPNAME }}"
+            url: dev.github.com
+          # - packagepath: "webapp"
+          #   appname: "jcantosz-test-admin-site"
+          #   url: dev.github.com/admin
     uses: ./.github/workflows/r_deploy_win.yaml
     with:
       ENVIRONMENT: "dev"
-      ENVIRONMENT_URL: "https://dev.github.com"
-      AZURE_WEBAPP_PACKAGE_PATH: "webapp"
-      WEBAPP_NAME: ${{ vars.webappname }}
+      ENVIRONMENT_URL: "${{ matrix.url }}"
+      AZURE_WEBAPP_PACKAGE_PATH: "${{ matrix.packagepath }}"
+      WEBAPP_NAME: "${{ matrix.appname }}"
       ARTIFACT_NAME: "webapp"
     # Pass all secrets the calling workflow has access to
     secrets: inherit

@@ -1,4 +1,4 @@
-name: Get Next Version
+name: Get Next Version (Windows)
 
 on:
   workflow_call:
@@ -37,14 +37,18 @@ jobs:
         id: get-next-version
         run: |
           git fetch --tags
-          $CURR_TAG=(git tag | select-string "v[0-9]+" | sort-object -Descending)[0].toString().trimStart('v')
+          $TAGS=(git tag)
+          $CURR_TAG=""
+
+          if (![string]::IsNullOrEmpty($TAGS)) {
+            $CURR_TAG=(git tag | select-string "v[0-9]+" | sort-object -Descending)[0].toString().trimStart('v')
+            $CURR_TAG=(([int64]$CURR_TAG) + 1)
+          }
 
           if ([string]::IsNullOrEmpty($CURR_TAG)) {
             $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
-          } else {
-            $CURR_TAG=(([int64]$CURR_TAG) + 1)
           }
-          
+
           $NEXT_VERSION=("v{0:0#}" -f $CURR_TAG)
 
           # Set as output

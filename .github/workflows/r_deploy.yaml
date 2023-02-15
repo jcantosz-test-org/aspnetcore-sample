@@ -15,6 +15,10 @@ on:
       RELEASE_VERSION:
         required: false
         type: string
+      ARTIFACT_DOWNLOAD_PATH:
+        required: false
+        type: string
+        default: artifacts
       AZURE_WEBAPP_PACKAGE_PATH:
         required: true
         type: string
@@ -44,13 +48,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
-          path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
+          path: ${{ inputs.ARTIFACT_DOWNLOAD_PATH }}
 
       - name: Download release
         if: ${{ inputs.ENVIRONMENT == 'uat' || inputs.ENVIRONMENT == 'prod' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release download ${{ inputs.RELEASE_VERSION }} --pattern '${{ inputs.ARTIFACT_NAME }}.tgz'
+        run: |
+          gh release download ${{ inputs.RELEASE_VERSION }} --pattern '${{ inputs.ARTIFACT_NAME }}.tgz'
+          tar xvzf ${{ inputs.ARTIFACT_NAME }}.tgz -C ${{ inputs.ARTIFACT_DOWNLOAD_PATH }}
 
       - name: 'Az CLI login'
         uses: azure/login@v1
@@ -71,4 +77,7 @@ jobs:
 #         uses: azure/webapps-deploy@v2
 #         with:
 #           app-name: ${{ inputs.WEBAPP_NAME }}
-#           package: "${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+#           package: "${{ARTIFACT_DOWNLOAD_PATH}}/${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}"
+      - name: "write deploying info to step summary"
+        run: |
+          echo "Deployed WebApp ${{ inputs.WEBAPP_NAME }} to ${{ inputs.ENVIRONMENT }} (${{ inputs.ENVIRONMENT_URL }})" >> $GITHUB_STEP_SUMMARY

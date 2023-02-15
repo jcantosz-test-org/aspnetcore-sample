@@ -13,6 +13,10 @@ on:
       AZURE_WEBAPP_PACKAGE_PATH:
         required: true
         type: string
+      ARTIFACT_DOWNLOAD_PATH:
+        required: false
+        type: string
+        default: artifacts
       ARTIFACT_NAME:
         required: true
         type: string
@@ -36,14 +40,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
-          path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
+          path: ${{ inputs.ARTIFACT_DOWNLOAD_PATH }}
 
       - name: Create prerelease
         id: prerelease
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}}
+          tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.ARTIFACT_DOWNLOAD_PATH}}
           gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
 
           RELEASE_URL=$(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')

@@ -1,4 +1,4 @@
-name: Create Release
+name: Create Release (Windows)
 
 on:
   workflow_call:
@@ -13,6 +13,10 @@ on:
       AZURE_WEBAPP_PACKAGE_PATH:
         required: true
         type: string
+      ARTIFACT_DOWNLOAD_PATH:
+        required: false
+        type: string
+        default: artifacts
       ARTIFACT_NAME:
         required: true
         type: string
@@ -36,14 +40,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
-          path: ${{ inputs.AZURE_WEBAPP_PACKAGE_PATH }}
+          path: ${{ inputs.ARTIFACT_DOWNLOAD_PATH }}
 
       - name: Create prerelease
         id: prerelease
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          compress-archive -Path  ${{inputs.AZURE_WEBAPP_PACKAGE_PATH}} -Force -DestinationPath ${{ inputs.ARTIFACT_NAME }}.zip
+          compress-archive -Path  ${{inputs.ARTIFACT_DOWNLOAD_PATH}} -Force -DestinationPath ${{ inputs.ARTIFACT_NAME }}.zip
 
           gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.zip"
 

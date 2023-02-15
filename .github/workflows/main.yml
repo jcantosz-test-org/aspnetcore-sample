@@ -32,14 +32,14 @@ jobs:
     # demo of deploying multiple artifacts
     strategy:
       fail-fast: false
-      max-parallel: 1
+      #max-parallel: 1
       matrix:
         include:
           - packagepath: "webapp"
             appname: "${{ vars.WEBAPPNAME }}"
             url: dev.github.com
           - packagepath: "webapp"
-            appname: "admin-site"
+            appname: "jcantosz-test-admin-site"
             url: dev.github.com/admin
     uses: ./.github/workflows/r_deploy_win.yaml
     with:

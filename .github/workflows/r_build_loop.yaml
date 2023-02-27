@@ -36,19 +36,19 @@ jobs:
           dotnet-version: ${{ inputs.DOTNET_CORE_VERSION }}
       - name: Restore
         run: |
-          $projects = ${{ inputs.PROJECT_DIRECTORIES }}.Split()
+          $projects = "${{ inputs.PROJECT_DIRECTORIES }}".Split()
           foreach($project in $projects){
             dotnet restore $project
           }
       - name: Build
         run: |
-          $projects = ${{ inputs.PROJECT_DIRECTORIES }}.Split()
+          $projects = "${{ inputs.PROJECT_DIRECTORIES }}".Split()
           foreach($project in $projects){
             dotnet build $project --no-restore
           }
       - name: Publish
         run: |
-          $projects = ${{ inputs.PROJECT_DIRECTORIES }}.Split()
+          $projects = "${{ inputs.PROJECT_DIRECTORIES }}".Split()
           foreach($project in $projects){
             dotnet publish $project --no-build --output "${{ inputs.OUTPUT_PATH }}"
           }

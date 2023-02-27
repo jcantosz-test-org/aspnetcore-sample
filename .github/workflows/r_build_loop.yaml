@@ -1,0 +1,60 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      ARTIFACT_PATHS:
+        required: true
+        type: string
+      DOTNET_CORE_VERSION:
+        required: false
+        type: string
+        default: "6.0.x"
+      OUTPUT_PATH:
+        required: false
+        type: string
+        default: "./publish"
+      PROJECT_DIRECTORIES:
+        required: false
+        type: string
+        default: '.'
+      ARTIFACT_NAME:
+        required: true
+        type: string
+      ARTIFACT_RETENETION_DAYS:
+        required: false
+        type: number
+        default: 1
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ inputs.DOTNET_CORE_VERSION }}
+      - name: Restore
+        run: |
+          $projects = ${{ inputs.PROJECT_DIRECTORIES }}.Split()
+          foreach($project in $projects){
+            dotnet restore $project
+          }
+      - name: Build
+        run: |
+          $projects = ${{ inputs.PROJECT_DIRECTORIES }}.Split()
+          foreach($project in $projects){
+            dotnet build $project --no-restore
+          }
+      - name: Publish
+        run: |
+          $projects = ${{ inputs.PROJECT_DIRECTORIES }}.Split()
+          foreach($project in $projects){
+            dotnet publish $project --no-build --output "${{ inputs.OUTPUT_PATH }}"
+          }
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: "${{ inputs.ARTIFACT_NAME }}"
+          path: "${{ inputs.ARTIFACT_PATHS }}"
+          retention-days: ${{ inputs.ARTIFACT_RETENETION_DAYS }}

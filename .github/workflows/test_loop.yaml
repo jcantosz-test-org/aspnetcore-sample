@@ -1,4 +1,4 @@
-name: AZ test webdeploy
+name: test loop
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.ref }}-loop
   cancel-in-progress: true
 
 permissions:

@@ -28,4 +28,5 @@ jobs:
           ssh-key: ${{ secrets.DEPLOY_SCRIPTS_SSH_KEY }}
           path: 'deploy_scripts'
       - run: ls -halt
+      - run: bash ./deploy_scripts/hello.sh
           

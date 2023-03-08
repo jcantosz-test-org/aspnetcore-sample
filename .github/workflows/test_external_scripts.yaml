@@ -9,14 +9,9 @@ concurrency:
   group: ${{ github.ref }}-external
   cancel-in-progress: true
 
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: write  # read is required for actions/checkout, write is required to create a release
-env:
-  AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
-  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 jobs:
-  build:
+  # Packaging scripts in a different repo
+  scripts_with_extra_clone:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,6 +26,12 @@ jobs:
       - run: ls -halt ./deploy_repo
       - run: |
           bash ./deploy_repo/scripts/hello.sh
+
+  # Packaging scripts with actions
+  scripts_with_actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
       - name: action no params
         uses: jcantosz-test-org/deploy-scripts@main
       - name: action deploy_webservice

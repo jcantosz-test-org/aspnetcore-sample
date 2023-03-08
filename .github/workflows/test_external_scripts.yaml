@@ -26,9 +26,9 @@ jobs:
           repository: jcantosz-test-org/deploy-scripts
           ref: main
           ssh-key: ${{ secrets.DEPLOY_SCRIPTS_SSH_KEY }}
-          path: 'deploy_scripts'
+          path: 'deploy_repo'
       - run: ls -halt
+      - run: ls -halt ./deploy_repo
       - run: |
-          ls -halt ./deploy_scripts
-          ./deploy_scripts/hello.sh
+          bash ./deploy_repo/scripts/hello.sh
           

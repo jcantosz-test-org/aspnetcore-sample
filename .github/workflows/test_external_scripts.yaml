@@ -31,4 +31,15 @@ jobs:
       - run: ls -halt ./deploy_repo
       - run: |
           bash ./deploy_repo/scripts/hello.sh
+      - name: action no params
+        uses: jcantosz-test-org/deploy-scripts@main
+      - name: action deploy_webservice
+        uses: jcantosz-test-org/deploy-scripts@main
+        with:
+          script: "deploy_webservice"
+      - name: action deploy_function
+        uses: jcantosz-test-org/deploy-scripts@main
+        with:
+          script: "deploy_function"
+
           

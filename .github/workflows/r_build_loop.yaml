@@ -52,6 +52,18 @@ jobs:
               dotnet build $project --no-restore
             }
           }
+      # ----
+      # ----
+      # Could also map like <project_path>:<output_path>
+      # and do (No spaces allowed in paths)
+      # $projects = "${{ inputs.PROJECT_DIRECTORIES }}".Trim().Split()
+      # foreach($project in $projects){
+      #   if( ![string]::IsNullOrEmpty($project)){
+      #     $project,$output = project.Split(':')
+      #     echo "PUBLISHING $project (output $output)
+      #     dotnet publish $project --no-build --output $output
+      #   }
+      # }
       - name: Publish
         run: |
           $projects = "${{ inputs.PROJECT_DIRECTORIES }}".Trim().Split()

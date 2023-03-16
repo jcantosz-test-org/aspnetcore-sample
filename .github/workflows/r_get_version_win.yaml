@@ -42,7 +42,7 @@ jobs:
 
           if (![string]::IsNullOrEmpty($TAGS)) {
             # Cast and sort the version as an integer and grab the largest one, set to 0 if cant find anything
-            $CURR_TAG=(git tag | select-string "v[0-9]+" | ForEach-Object -Process { [int]$_.toString().trimStart("v")} | sort-object Number -Descending)[0] || 0
+            $CURR_TAG=(git tag | select-string "v[0-9]+" | ForEach-Object -Process { [int64]$_.toString().trimStart("v")} | sort-object Number -Descending)[0] || 0
             $CURR_TAG=($CURR_TAG + 1)
           }
 

@@ -49,7 +49,7 @@ jobs:
         run: |
           compress-archive -Path  ${{inputs.ARTIFACT_DOWNLOAD_PATH}} -Force -DestinationPath ${{ inputs.ARTIFACT_NAME }}.zip
 
-          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --notes "workflow: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID" --generate-notes "${{ inputs.ARTIFACT_NAME }}.zip"
+          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --notes "[workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" --generate-notes "${{ inputs.ARTIFACT_NAME }}.zip"
 
           $RELEASE_URL=(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')
           echo "RELEASE_URL=${RELEASE_URL}" >> $env:GITHUB_OUTPUT

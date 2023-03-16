@@ -57,4 +57,8 @@ jobs:
           echo "NEXT_VERSION=$NEXT_VERSION" >> $env:GITHUB_OUTPUT
 
 
+          # For Semvers
+          # $CURR_TAG=(git tag | select-string "v[0-9]+" | ForEach-Object -Process { [Version]$_.toString().trimStart("v")} | sort-object -Descending)[0] || [Version]"0.0.0"
+          # $CURR_TAG=[Version]::new($CURR_TAG.Major, $CURR_TAG.Minor, $CURR_TAG.Build + 1)
+
 

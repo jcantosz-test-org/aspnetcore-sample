@@ -41,15 +41,16 @@ jobs:
           $CURR_TAG=""
 
           if (![string]::IsNullOrEmpty($TAGS)) {
-            $CURR_TAG=(git tag | select-string "v[0-9]+" | sort-object -Descending)[0].toString().trimStart('v')
-            $CURR_TAG=(([int64]$CURR_TAG) + 1)
+            # Cast and sort the version as an integer and grab the largest one, set to 0 if cant find anything
+            $CURR_TAG=(git tag | select-string "v[0-9]+" | ForEach-Object -Process { [int]$_.toString().trimStart("v")} | sort-object Number -Descending)[0] || 0
+            $CURR_TAG=($CURR_TAG + 1)
           }
 
           if ([string]::IsNullOrEmpty($CURR_TAG)) {
             $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
           }
 
-          $NEXT_VERSION=("v{0:0#}" -f $CURR_TAG)
+          $NEXT_VERSION=("v{0:#}" -f $CURR_TAG)
 
           # Set as output
           echo $NEXT_VERSION

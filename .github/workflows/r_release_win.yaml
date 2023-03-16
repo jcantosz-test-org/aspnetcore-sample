@@ -49,11 +49,11 @@ jobs:
         run: |
           compress-archive -Path  ${{inputs.ARTIFACT_DOWNLOAD_PATH}} -Force -DestinationPath ${{ inputs.ARTIFACT_NAME }}.zip
 
-          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.zip"
+          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --notes "workflow: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --generate-notes "${{ inputs.ARTIFACT_NAME }}.zip"
 
           $RELEASE_URL=(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')
           echo "RELEASE_URL=${RELEASE_URL}" >> $env:GITHUB_OUTPUT
-#          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes
+#          gh release create $release_number --repo ${GITHUB_REPOSITORY} --prerelease=${{inputs.PRERELEASE}} --generate-notes 
           # gh release view --repo jcantosz-test-org/aspnetcore-sample  --json isPrerelease --jq '.isPrerelease'
   create-release:
     if: ${{ ! inputs.PRERELEASE }}

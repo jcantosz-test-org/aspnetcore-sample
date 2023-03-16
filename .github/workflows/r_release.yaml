@@ -48,7 +48,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           tar cvzf ${{ inputs.ARTIFACT_NAME }}.tgz ${{inputs.ARTIFACT_DOWNLOAD_PATH}}
-          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
+          gh release create ${{ inputs.RELEASE_VERSION }} --prerelease=${{inputs.PRERELEASE}} --notes "workflow: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --generate-notes "${{ inputs.ARTIFACT_NAME }}.tgz"
 
           RELEASE_URL=$(gh release view ${{ inputs.RELEASE_VERSION }} --json 'url' --jq '.url')
           echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_OUTPUT

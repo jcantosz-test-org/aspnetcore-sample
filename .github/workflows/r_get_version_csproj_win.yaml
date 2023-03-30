@@ -22,7 +22,7 @@ jobs:
       - name: get next version
         id: get-next-version
         run: |
-          $csprojPath = ${{ inputs.CSPROJ_PATH }}
+          $csprojPath = "${{ inputs.CSPROJ_PATH }}"
           $date = [Int32](Get-Date -Format "yyMMdd")
           $time = [Int32](Get-Date -Format "HHmmss")
 

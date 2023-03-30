@@ -1,0 +1,38 @@
+name: Get Next Version from csproj (Windows)
+
+on:
+  workflow_call:
+    inputs:
+      CSPROJ_PATH:
+        required: true
+        type: string
+    outputs:
+      NEXT_VERSION:
+        description: "The next version to release"
+        value: ${{ jobs.create-version.outputs.NEXT_VERSION }}
+
+jobs:
+  create-version:
+    runs-on: windows-2019
+    outputs:
+      NEXT_VERSION: ${{ steps.get-next-version.outputs.NEXT_VERSION }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: get next version
+        id: get-next-version
+        run: |
+          $csprojPath = ${{ inputs.CSPROJ_PATH }}
+          $date = [Int32](Get-Date -Format "yyMMdd")
+          $time = [Int32](Get-Date -Format "HHmmss")
+
+          # Make sure csproj file exists
+          if (-not (Test-Path $csprojPath)) {
+            throw "The specified csproj file does not exist: $csprojPath"
+          }
+
+          $xml = [xml](Get-Content $csprojPath)
+          $version = [Version]$xml.Project.PropertyGroup.AssemblyVersion
+          $newVersion = [Version]::new($version.Major, $version.Minor, $date, $time)
+
+          echo "NEXT_VERSION=$newVersion.toString()" >> $env:GITHUB_OUTPUT

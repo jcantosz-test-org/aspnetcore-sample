@@ -66,4 +66,26 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: gh release edit ${{ inputs.RELEASE_VERSION }} --prerelease=${{ inputs.PRERELEASE }} --latest
 
-
+  # TODO: Add JSON_PATH and CSPROJ_PATH as inputs and update script to use those
+  # Strip out 'v' from version tag (or add it in for git tag)
+  update-files:
+    if: false
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v3
+      - name: Write verison back to csproj
+        run: |
+          $json = Get-Content $jsonPath | ConvertFrom-Json
+          $json.project.version = "${{ inputs.RELEASE_VERSION }}"
+          $jsonString = $json | ConvertTo-Json -Depth 100
+          Set-Content -Path $jsonPath -Value $jsonString
+      - name: Write version back to JSON
+        run: |
+          $xml = [xml](Get-Content $csprojPath)
+          $xml.Project.PropertyGroup.AssemblyVersion = "${{ inputs.RELEASE_VERSION }}"
+          $xml.save("$csprojPath")
+      - name: commit files back to git
+        run: |
+          git add .
+          git commit -am "bump version"
+          git push

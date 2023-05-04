@@ -14,7 +14,7 @@ on:
       TAG_FORMAT:
         required: false
         type: string
-        default: '[0-9]+'
+        default: '[0-9]+$'
     secrets:
       GH_TOKEN:
         required: true
@@ -38,19 +38,19 @@ jobs:
         run: |
           git fetch --tags
           $TAGS=(git tag)
-          $CURR_TAG=""
+          $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
 
           if (![string]::IsNullOrEmpty($TAGS)) {
             # Cast and sort the version as an integer and grab the largest one, set to 0 if cant find anything
-            $CURR_TAG=(git tag | select-string "v[0-9]+" | ForEach-Object -Process { [int64]$_.toString().trimStart("v")} | sort-object -Descending)[0] || 0
-            $CURR_TAG=($CURR_TAG + 1)
+            $CURR_TAGS=($TAGS | select-string "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"| ForEach-Object -Process { [int64]$_.toString().trimStart("v")} | sort-object -Descending)
+         
+            # If tags list is not empty, take the first tag as the current tag and increment it
+            if ( $CURR_TAGS.count -gt 0 ) {
+              $CURR_TAG=($CURR_TAGS[0] + 1)
+            } # else use the fallback tag
           }
 
-          if ([string]::IsNullOrEmpty($CURR_TAG)) {
-            $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
-          }
-
-          $NEXT_VERSION=("v{0:#}" -f $CURR_TAG)
+          $NEXT_VERSION=("${{ inputs.TAG_PREFIX }}{0:#}" -f $CURR_TAG)
 
           # Set as output
           echo $NEXT_VERSION

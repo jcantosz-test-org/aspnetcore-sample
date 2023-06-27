@@ -12,3 +12,6 @@ for i in {dev,qa,uat,prod}; do
         gh secret set $secret --repo ${ORG}/${REPO} --app actions --env $i --body ${!secret}
     done
 done
+
+
+# this is a new comment to this script

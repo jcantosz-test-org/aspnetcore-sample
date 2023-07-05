@@ -1,5 +1,11 @@
+name: Azure Load Test
+
 on:
   workflow_dispatch:
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: write  # read is required for actions/checkout, write is required to create a release
 
 jobs:
   deploy:

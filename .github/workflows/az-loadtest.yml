@@ -10,15 +10,13 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: 
-      name: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-id: '868fa0bc-48b0-4a40-a850-fc62c0b6a2a6'
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: 'Azure Load Testing'

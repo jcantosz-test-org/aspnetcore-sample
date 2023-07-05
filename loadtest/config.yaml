@@ -1,0 +1,17 @@
+displayName: Get_azure.microsoft.com
+testPlan: quick_test.jmx
+description: 
+engineInstances: 1
+testId: 20a63f38-aba5-4ebd-86ea-d2b27d1ef310
+splitAllCSVs: False
+env:
+- name: domain
+  value: azure.microsoft.com
+- name: protocol
+  value: https
+- name: threads_per_engine
+  value: 1
+- name: ramp_up_time
+  value: 0
+- name: duration_in_sec
+  value: 10

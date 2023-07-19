@@ -8,7 +8,25 @@ permissions:
   contents: write  # read is required for actions/checkout, write is required to create a release
 
 jobs:
-  deploy:
+  deploy-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZ_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZ_TENANT_ID }}
+          subscription-id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
+      - name: 'Azure Load Testing'
+        uses: azure/load-testing@v1
+        with:
+          loadTestConfigFile: 'loadtest/config.yaml'
+          loadTestResource: 'jcantosz-load-test'
+          resourceGroup: 'jcantosz'
+          
+  deploy-windows:
     runs-on: windows-2019
     steps:
       - name: Checkout
@@ -20,9 +38,8 @@ jobs:
           tenant-id: ${{ secrets.AZ_TENANT_ID }}
           subscription-id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
       - name: 'Azure Load Testing'
-        uses: azure/load-testing@v1.1.16
+        uses: azure/load-testing@v1
         with:
           loadTestConfigFile: 'loadtest/config.yaml'
           loadTestResource: 'jcantosz-load-test'
           resourceGroup: 'jcantosz'
-          

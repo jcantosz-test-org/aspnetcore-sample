@@ -37,9 +37,21 @@ jobs:
           client-id: ${{ secrets.AZ_CLIENT_ID }}
           tenant-id: ${{ secrets.AZ_TENANT_ID }}
           subscription-id: ${{ secrets.AZ_SUBSCRIPTION_ID }}
-      - name: 'Azure Load Testing'
-        uses: azure/load-testing@v1
-        with:
-          loadTestConfigFile: 'loadtest/config.yaml'
-          loadTestResource: 'jcantosz-load-test'
-          resourceGroup: 'jcantosz'
+      - name: "Azure Load Testing"
+        run: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az load test-run create \
+            --load-test-resource jcantosz-load-test \
+            --resource-group jcantosz \
+            --test-id "20a63f38-aba5-4ebd-86ea-d2b27d1ef310" \
+            --display-name "GitHub Actions run $(date)" \
+            --description "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --test-run-id "$(date +%s)"
+
+            # --env
+      # - name: 'Azure Load Testing'
+      #   uses: azure/load-testing@v1
+      #   with:
+      #     loadTestConfigFile: 'loadtest/config.yaml'
+      #     loadTestResource: 'jcantosz-load-test'
+      #     resourceGroup: 'jcantosz'

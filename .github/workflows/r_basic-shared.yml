@@ -1,0 +1,8 @@
+name: resuable
+on:
+  workflow_call:
+jobs:
+  runtest:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo ok

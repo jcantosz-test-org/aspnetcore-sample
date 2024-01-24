@@ -7,10 +7,6 @@ on:
         required: false
         type: string
         default: "v"
-      FALLBACK_TAG:
-        required: false
-        type: string
-        default: "1"
       TAG_FORMAT:
         required: false
         type: string
@@ -38,19 +34,29 @@ jobs:
         run: |
           git fetch --tags
           $TAGS=(git tag)
-          $CURR_TAG="${{ inputs.FALLBACK_TAG }}"
 
-          if (![string]::IsNullOrEmpty($TAGS)) {
-            # Cast and sort the version as an integer and grab the largest one, set to 0 if cant find anything
-            $CURR_TAGS=($TAGS | select-string "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}"| ForEach-Object -Process { [int64]$_.toString().trimStart("${{ inputs.TAG_PREFIX }}")} | sort-object -Descending)
-         
-            # If tags list is not empty, take the first tag as the current tag and increment it
-            if ( $CURR_TAGS.count -gt 0 ) {
-              $CURR_TAG=($CURR_TAGS[0] + 1)
-            } # else use the fallback tag
+          # Figure out how many fields the tag format has based on the number of dots in it (min of 0 and max of 3 dots is supported)
+          $NUM_FIELDS = ("${{ INPUTS.TAG_FORMAT }}".ToCharArray() | Where-Object {$_ -eq "."}).Count + 1
+
+          # Convert each tag to a powershell "version" and sort
+          $CURR_TAGS=$($TAGS | select-string "${{ inputs.TAG_PREFIX }}${{ inputs.TAG_FORMAT }}" | ForEach-Object -Process { $_.toString().trimStart("${{ inputs.TAG_PREFIX }}")} | ForEach-Object -Process {[Version]$_} | sort-object -Descending)
+
+          # Use default tag if there are no tags on this repo yet
+          if($CURR_TAGS.Count -eq 0){
+             $CURR_TAG = [Version]::new(0,0,0,0)
+          } else {
+            $CURR_TAG = $CURR_TAGS[0]
           }
 
-          $NEXT_VERSION=("${{ inputs.TAG_PREFIX }}{0:#}" -f $CURR_TAG)
+          # Increment the least significate portion of the tag (humans can bump more significate parts if desired, but automation never will with this)
+          switch($NUM_FIELDS){
+            1 { $NEW_TAG = [Version]::new( $CURR_TAG.Major+1, 0, 0, 0 )}
+            2 { $NEW_TAG = [Version]::new( $CURR_TAG.Major, $CURR_TAG.Minor+1, 0, 0 )}
+            3 { $NEW_TAG = [Version]::new( $CURR_TAG.Major, $CURR_TAG.Minor, $CURR_TAG.Build+1, 0 )}
+            default { $NEW_TAG = [Version]::new( $CURR_TAG.Major, $CURR_TAG.Minor, $CURR_TAG.Build, $CURR_TAG.REVISION+1 )}
+          }
+          
+          $NEXT_VERSION = $NEW_TAG.ToString($NUM_FIELDS)
 
           # Set as output
           echo $NEXT_VERSION

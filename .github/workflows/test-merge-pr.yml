@@ -2,16 +2,30 @@ name: Merge To Branch
 on: 
   workflow_dispatch:
  
-# permissions:
-#   contents: write
-#   pull-requests: write
-permissions: write-all
+permissions:
+  contents: write
+  pull-requests: write
+# permissions: write-all
 jobs: 
   create-pr: 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh pr create --base Release --head jcantosz-patch-5 --title "Auto Merge" --body "Auto Merge Body"
+        with:
+          ref: "jcantosz-patch-5"
+          fetch-depth: 0
+      - run: |
+          git merge origin/main --no-edit
+          git push
+      # - uses: actions/checkout@v3
+      #   with:
+      #     ref: "Release"
+      #     fetch-depth: 0
+      # - run: |
+      #     git merge origin/main --no-edit
+      #     git push
+      # - env:
+      #     GH_TOKEN: ${{ github.token }}
+      #   run: |
+      #     gh pr create --base Release --head jcantosz-patch-5 --title "Auto Merge" --body "Auto Merge Body"
+  

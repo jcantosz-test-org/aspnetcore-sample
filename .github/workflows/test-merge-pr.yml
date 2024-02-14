@@ -2,9 +2,10 @@ name: Merge To Branch
 on: 
   workflow_dispatch:
  
-permissions:
-  contents: write
-  pull-requests: write
+# permissions:
+#   contents: write
+#   pull-requests: write
+permissions: write-all
 jobs: 
   create-pr: 
     runs-on: ubuntu-latest

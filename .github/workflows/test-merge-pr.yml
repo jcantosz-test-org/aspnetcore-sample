@@ -1,0 +1,16 @@
+name: Merge To Branch
+on: 
+  workflow_dispatch:
+ 
+permissions:
+  contents: write
+  pull-requests: write
+jobs: 
+  create-pr: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create --base Release --head jcantosz-patch-5 --title "Auto Merge" --body "Auto Merge Body"

@@ -3,6 +3,7 @@ name: Update Release Description
 on:
   workflow_dispatch:
   push:
+    branches: [main]
 permissions:
   contents: write
   issues: read
@@ -19,6 +20,6 @@ jobs:
       - name: Update Release Description with Linked Issues
         uses: jcantosz/release-issues-action@main # Use the action defined in the repository
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT }}
           github_repository: ${{ github.repository }}
           github_release_tag: "v1.0.0"

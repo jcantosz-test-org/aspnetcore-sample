@@ -20,4 +20,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-repository: ${{ github.repository }}
-          github-ref: "v1.0.8"
+          github_release_tag: "v1.0.0"

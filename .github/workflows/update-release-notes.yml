@@ -1,0 +1,23 @@
+name: Update Release Description
+
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+  
+  
+jobs:
+  update-release-description:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Release Description with Linked Issues
+        uses: jcantosz/release-issues-action@main # Use the action defined in the repository
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-repository: ${{ github.repository }}
+          github-ref: "v1.0.8"

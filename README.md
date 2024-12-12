@@ -1,3 +1,4 @@
-add readme
-test
-ok
+# aspnetcore-sample
+
+Repo with test reusable GitHub Actions workflows
+

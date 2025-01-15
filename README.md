@@ -3,8 +3,27 @@
 Repo with test reusable GitHub Actions workflows
 
 ## [Workflows](./.github/workflows)
+- [az-loadtest.yml](#az-loadtestyml)
+- [main.yml](#mainyml)
+- [r_basic-shared.yml (Reusable Workflow)](#r_basic-sharedyml-reusable-workflow)
+- [r_build.yaml (Reusable Workflow)](#r_buildyaml-reusable-workflow)
+- [r_build_dotnet_framework.yaml (Reusable Workflow)](#r_build_dotnet_frameworkyaml-reusable-workflow)
+- [r_build_loop.yaml (Reusable Workflow)](#r_build_loopyaml-reusable-workflow)
+- [r_deploy_win.yaml (Reusable Workflow)](#r_deploy_winyaml-reusable-workflow)
+- [r_deploy_az_function_win.yaml (Reusable Workflow)](#r_deploy_az_function_winyaml-reusable-workflow)
+- [r_get_version.yaml (Reusable Workflow)](#r_get_versionyaml-reusable-workflow)
+- [r_get_version_csproj_win.yaml (Reusable Workflow)](#r_get_version_csproj_winyaml-reusable-workflow)
+- [r_get_version_win.yaml (Reusable Workflow)](#r_get_version_winyaml-reusable-workflow)
+- [r_release.yaml (Reusable Workflow)](#r_releaseyaml-reusable-workflow)
+- [r_release_win.yaml (Reusable Workflow)](#r_release_winyaml-reusable-workflow)
+- [redeploy-uat-prod.yaml](#redeploy-uat-prodyaml)
+- [test-enhancements.yaml](#test-enhancementsyaml)
+- [test-merge-pr.yml](#test-merge-pryml)
+- [test_external_scripts.yaml](#test_external_scriptsyaml)
+- [test_loop.yaml](#test_loopyaml)
+- [update-release-notes.yml](#update-release-notesyml)
 
-### 1. `az-loadtest.yml`
+### `az-loadtest.yml`
 - **Description**: This workflow is designed to perform load testing using Azure Load Testing services on both Linux and Windows environments.
 - **Triggers**: 
   - `workflow_dispatch`: This workflow can be manually triggered.
@@ -19,7 +38,7 @@ Repo with test reusable GitHub Actions workflows
     - `azure/login@v1`
     - `azure/load-testing@v1`
 
-### 2. `main.yml`
+### `main.yml`
 - **Description**: This workflow handles the build and deployment process for different environments (dev, qa, uat, prod) and also manages versioning and releases.
 - **Triggers**: 
   - `push` to the `main` branch.
@@ -43,7 +62,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 3. `r_basic-shared.yml` (Reusable Workflow)
+### `r_basic-shared.yml` (Reusable Workflow)
 - **Description**: This is a reusable workflow that can be called by other workflows to run a simple test.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -53,7 +72,7 @@ Repo with test reusable GitHub Actions workflows
 - **Dependencies**:
   - None
 
-### 4. `r_build.yaml` (Reusable Workflow)
+### `r_build.yaml` (Reusable Workflow)
 - **Description**: This workflow builds the .NET project, restores dependencies, and publishes artifacts.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -71,7 +90,7 @@ Repo with test reusable GitHub Actions workflows
     - `actions/setup-dotnet@v2`
     - `actions/upload-artifact@v3`
 
-### 5. `r_build_dotnet_framework.yaml` (Reusable Workflow)
+### `r_build_dotnet_framework.yaml` (Reusable Workflow)
 - **Description**: This workflow builds a .NET Framework solution, restores NuGet packages, and uploads build artifacts.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -90,7 +109,7 @@ Repo with test reusable GitHub Actions workflows
     - `microsoft/setup-msbuild@v1.0.2`
     - `actions/upload-artifact@v2`
 
-### 6. `r_build_loop.yaml` (Reusable Workflow)
+### `r_build_loop.yaml` (Reusable Workflow)
 - **Description**: This workflow builds multiple .NET projects in a loop, restores dependencies, and publishes artifacts.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -108,7 +127,7 @@ Repo with test reusable GitHub Actions workflows
     - `actions/setup-dotnet@v2`
     - `actions/upload-artifact@v3`
 
-### 7. `r_deploy_win.yaml` (Reusable Workflow)
+### `r_deploy_win.yaml` (Reusable Workflow)
 - **Description**: This workflow handles the deployment of web applications to Azure WebApp on Windows environments.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -126,7 +145,7 @@ Repo with test reusable GitHub Actions workflows
     - `azure/login@v1`
     - `azure/appservice-settings@v1`
 
-### 8. `r_deploy_az_function_win.yaml` (Reusable Workflow)
+### `r_deploy_az_function_win.yaml` (Reusable Workflow)
 - **Description**: This workflow handles the deployment of Azure Functions on Windows environments.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -143,7 +162,7 @@ Repo with test reusable GitHub Actions workflows
     - `azure/login@v1`
     - `Azure/functions-action@v1`
 
-### 9. `r_get_version.yaml` (Reusable Workflow)
+### `r_get_version.yaml` (Reusable Workflow)
 - **Description**: This workflow determines the next version to release based on the current tags.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -155,7 +174,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 10. `r_get_version_csproj_win.yaml` (Reusable Workflow)
+### `r_get_version_csproj_win.yaml` (Reusable Workflow)
 - **Description**: This workflow reads the version from a specified `.csproj` file and determines the next version to release.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -167,7 +186,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 11. `r_get_version_win.yaml` (Reusable Workflow)
+### `r_get_version_win.yaml` (Reusable Workflow)
 - **Description**: This workflow determines the next version to release based on the current tags, specifically for Windows environments.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -179,7 +198,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 12. `r_release.yaml` (Reusable Workflow)
+### `r_release.yaml` (Reusable Workflow)
 - **Description**: This workflow creates a new release, either as a prerelease or a final release.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -195,7 +214,7 @@ Repo with test reusable GitHub Actions workflows
     - `actions/download-artifact@v3`
   - `gh cli`
 
-### 13. `r_release_win.yaml` (Reusable Workflow)
+### `r_release_win.yaml` (Reusable Workflow)
 - **Description**: This workflow creates a new release, either as a prerelease or a final release, specifically for Windows environments.
 - **Triggers**: 
   - `workflow_call`: This workflow can be triggered by other workflows.
@@ -211,7 +230,7 @@ Repo with test reusable GitHub Actions workflows
     - `actions/download-artifact@v3`
   - `gh cli`
 
-### 14. `redeploy-uat-prod.yaml`
+### `redeploy-uat-prod.yaml`
 - **Description**: This workflow redeploys a specified version to UAT and production environments.
 - **Triggers**: 
   - `workflow_dispatch`: This workflow can be manually triggered.
@@ -228,7 +247,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 15. `test-enhancements.yaml`
+### `test-enhancements.yaml`
 - **Description**: This workflow is for testing enhancements to the build and deployment process, including deploying to multiple web applications.
 - **Triggers**: 
   - `workflow_dispatch`: This workflow can be manually triggered.
@@ -246,7 +265,7 @@ Repo with test reusable GitHub Actions workflows
     - `actions/setup-dotnet@v2`
     - `actions/upload-artifact@v3`
 
-### 16. `test-merge-pr.yml`
+### `test-merge-pr.yml`
 - **Description**: This workflow handles merging changes from one branch to another.
 - **Triggers**: 
   - `workflow_dispatch`: This workflow can be manually triggered.
@@ -259,7 +278,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 17. `test_external_scripts.yaml`
+### `test_external_scripts.yaml`
 - **Description**: This workflow tests the usage of external scripts by cloning a separate repository containing the scripts and executing them.
 - **Triggers**: 
   - `push` to the `main` branch.
@@ -273,7 +292,7 @@ Repo with test reusable GitHub Actions workflows
   - Actions:
     - `actions/checkout@v3`
 
-### 18. `test_loop.yaml`
+### `test_loop.yaml`
 - **Description**: This workflow tests the build process for multiple .NET projects in a loop.
 - **Triggers**: 
   - `push` to the `main` branch.
@@ -285,7 +304,7 @@ Repo with test reusable GitHub Actions workflows
   - Workflow Calls:
     - `./.github/workflows/r_build_loop.yaml`
 
-### 19. `update-release-notes.yml`
+### `update-release-notes.yml`
 - **Description**: This workflow updates the release description with linked issues.
 - **Triggers**: 
   - `push` to the `main` branch.

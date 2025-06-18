@@ -9,7 +9,7 @@ on:
       DOTNET_CORE_VERSION:
         required: false
         type: string
-        default: "8.0.x"
+        default: "6.0.x"
       OUTPUT_PATH:
         required: false
         type: string
@@ -29,9 +29,9 @@ jobs:
   build:
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: ${{ inputs.DOTNET_CORE_VERSION }}
       - name: Restore

@@ -80,7 +80,7 @@ jobs:
           echo "Deployed WebApp ${{ vars.WEBAPPNAME }} to dev" >> $env:GITHUB_STEP_SUMMARY
 
   deploy-qa:
-    needs: build
+    needs: deploy-dev
     runs-on: windows-2019
     environment: qa
     steps:

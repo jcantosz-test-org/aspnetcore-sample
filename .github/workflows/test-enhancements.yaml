@@ -24,16 +24,16 @@ jobs:
           /home/runner/work/aspnetcore-sample/aspnetcore-sample/publish
           /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/bin
           /home/runner/work/aspnetcore-sample/aspnetcore-sample/jcantosz-myapp/Pages
-      DOTNET_CORE_VERSION: "8.0.x"
+      DOTNET_CORE_VERSION: "6.0.x"
       ARTIFACT_NAME: "webapp"
   build-inline:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "6.0.x"
       - name: Restore
         run: dotnet restore .
       - name: Build

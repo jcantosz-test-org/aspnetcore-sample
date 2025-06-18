@@ -71,7 +71,7 @@ jobs:
           
       - uses: azure/appservice-settings@v1
         with:
-          app-name: ${{ inputs.WEBAPP_NAME }}
+          app-name: ${{ vars.WEBAPPNAME }}
           mask-inputs: false
           app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
 
@@ -106,7 +106,7 @@ jobs:
           
       - uses: azure/appservice-settings@v1
         with:
-          app-name: ${{ inputs.WEBAPP_NAME }}
+          app-name: ${{ vars.WEBAPPNAME }}
           mask-inputs: false
           app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
 

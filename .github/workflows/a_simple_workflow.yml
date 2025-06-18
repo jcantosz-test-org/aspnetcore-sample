@@ -1,0 +1,115 @@
+name: AZ Simple Build Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: write  # read is required for actions/checkout, write is required to create a release
+env:
+  AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore
+        run: dotnet restore .
+
+      - name: Build
+        run: dotnet build . --no-restore
+      
+      - name: Publish
+        run: dotnet publish . --no-build --output ./publish
+      
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ vars.WEBAPPNAME }}
+          path: |
+            "./publish"
+            jcantosz-myapp/bin
+
+  deploy-dev:
+    needs: build
+    runs-on: windows-2019
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ vars.WEBAPPNAME }}
+          path: artifacts
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: run script
+        run: |
+          az webapp list
+          az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
+          
+      - uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ inputs.WEBAPP_NAME }}
+          mask-inputs: false
+          app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
+
+      - name: "write deploying info to step summary"
+        run: |
+          echo "Deployed WebApp ${{ vars.WEBAPPNAME }} to dev" >> $env:GITHUB_STEP_SUMMARY
+
+  deploy-qa:
+    needs: build
+    runs-on: windows-2019
+    environment: qa
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ vars.WEBAPPNAME }}
+          path: artifacts
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: run script
+        run: |
+          az webapp list
+          az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
+          
+      - uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ inputs.WEBAPP_NAME }}
+          mask-inputs: false
+          app-settings-json: '[{ "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "1", "slotSetting": false }]'
+
+      - name: "write deploying info to step summary"
+        run: |
+          echo "Deployed WebApp ${{ vars.WEBAPPNAME }} to qa" >> $env:GITHUB_STEP_SUMMARY

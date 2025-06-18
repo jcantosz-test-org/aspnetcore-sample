@@ -24,7 +24,7 @@ jobs:
       ARTIFACT_PATHS: |
         "./publish"
         jcantosz-myapp/bin
-      DOTNET_CORE_VERSION: "6.0.x"
+      DOTNET_CORE_VERSION: "8.0.x"
       ARTIFACT_NAME: "webapp"
 
   deploy-dev:

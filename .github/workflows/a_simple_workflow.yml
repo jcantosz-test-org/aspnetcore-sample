@@ -17,6 +17,11 @@ env:
   AZURE_DEFAULTS_GROUP: "${{secrets.RESOURCE_GROUP}}"
   AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 jobs:
+  dump_vars:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "${{ toJSON(vars) }}"
+      
   build:
     runs-on: ubuntu-latest
     steps:

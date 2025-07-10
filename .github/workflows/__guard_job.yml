@@ -1,0 +1,10 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  my_job:
+    if: startsWith( github.ref_name, "jcantosz-")
+    runs-on: ubuntu-latest
+    steps:
+    - run: ${{ github.ref_name }}
+    - run: echo "hello"   

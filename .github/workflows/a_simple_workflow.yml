@@ -70,7 +70,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: run script
-        uses: azure/cli@2
+        uses: azure/cli@v2
         with:
           script: |
             az webapp list
@@ -112,7 +112,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: run script
-        uses: azure/cli@2
+        uses: azure/cli@v2
         with:
           script: |
             az webapp list

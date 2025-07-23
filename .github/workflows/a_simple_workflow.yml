@@ -103,7 +103,14 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          
+
+      - name: run script
+        uses: azure/cli@2
+        with:
+          script: |
+            az webapp list
+            az webapp list --resource-group ${{secrets.RESOURCE_GROUP}}
+
       - name: run script
         run: |
           az webapp list

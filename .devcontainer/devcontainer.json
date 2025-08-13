@@ -6,7 +6,7 @@
   },
   "hostRequirements": {
    "cpus": 1,
-   "memory": "1gb",
+   "memory": "3gb",
    "storage": "2gb"
   },
   "customizations": {

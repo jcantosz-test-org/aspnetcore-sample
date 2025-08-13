@@ -1,0 +1,31 @@
+{
+  "name": "default environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "containerEnv": {
+    "IS_DEV": false
+  },
+  "hostRequirements": {
+   "cpus": 1,
+   "memory": "1gb",
+   "storage": "2gb"
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md",
+        "jcantosz-myapp/Program.cs",
+        ".github/workflows/main.yml"
+      ]
+    }
+  },
+  "secrets": {
+    "DEEPEST_SECRET": {
+      "description": "shhh.. don't tell anyone",
+      "documentationUrl": "https://github.com/"
+    },
+    "DARKEST_SECRET": {
+      "description": "shhh.. don't tell anyone",
+      "documentationUrl": "https://github.com/"
+    }
+  }
+}
